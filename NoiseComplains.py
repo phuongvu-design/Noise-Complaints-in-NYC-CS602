@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 import pydeck as pdk
 import streamlit as st
 
-DATA_FILE = "Project Data Files/311_Noise_Complaints_20260403.csv"
+DATA_FILE = "311_Noise_Complaints_20260403.csv"
 
 BOROUGH_COLORS = {
     "BROOKLYN": "#1f77b4",
