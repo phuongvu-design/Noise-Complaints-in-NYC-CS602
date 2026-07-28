@@ -31,11 +31,8 @@ BOROUGH_COLORS = {
 
 @st.cache_data
 def load_data(path, encoding="utf-8"):
-    """Read the noise-complaint CSV, keep useful columns, clean it, and add
-    a Hour column derived from the complaint's Created Date."""
     df = pd.read_csv(path, encoding=encoding, low_memory=False)
 
-    # Keep only the columns we need and rename them to shorter names.
     keep = {
         "Created Date": "Created Date",
         "Problem (formerly Complaint Type)": "Complaint Type",
@@ -60,7 +57,6 @@ def load_data(path, encoding="utf-8"):
     return df
 
 def filter_data(df, borough, complaint_types, hour_range):
-    """Return the rows that match the sidebar selections."""
     result = df
 
 
@@ -78,7 +74,6 @@ def filter_data(df, borough, complaint_types, hour_range):
 
 
 def busiest_hour(df):
-    """Return the hour with the most complaints and how many there were."""
     if len(df) == 0:
         return None, 0
     counts = df["Hour"].value_counts()
@@ -87,20 +82,13 @@ def busiest_hour(df):
 
 
 def top_complaints(df, n=5):
-    """[DA2]/[DA3] Sort complaint types by count (descending) and return the
-    top n as a Series."""
     counts = df["Complaint Type"].value_counts()
     return counts.sort_values(ascending=False).head(n)
 
 
 def make_bar_chart(df):
-    """[VIZ1] Bar chart of complaints per borough."""
     counts = df["Borough"].value_counts().sort_values(ascending=False)  # [DA2]
-
-    # [PY4] List comprehension: build the color list, one color per borough,
-    # by looking each borough up in the dictionary.
     colors = [BOROUGH_COLORS.get(b, "#888888") for b in counts.index]
-
     fig, ax = plt.subplots()
     ax.bar(counts.index, counts.values, color=colors)
     ax.set_title("Noise Complaints by Borough")
@@ -111,7 +99,6 @@ def make_bar_chart(df):
 
 
 def make_pie_chart(df):
-    """[VIZ2] Pie chart of the complaint-type breakdown (top 5)."""
     counts = top_complaints(df, 5)  # [PY1] called WITHOUT the default (n=5 given)
     fig, ax = plt.subplots()
     ax.pie(counts.values, labels=counts.index, autopct="%1.1f%%", startangle=90)
@@ -121,11 +108,8 @@ def make_pie_chart(df):
 
 
 def make_line_chart(df):
-    """[VIZ3] Line chart of complaints by hour of day."""
-    by_hour = df.groupby("Hour").size()  # [DA7] group
-    # Make sure all 24 hours show up even if some have zero complaints.
+    by_hour = df.groupby("Hour").size()
     by_hour = by_hour.reindex(range(24), fill_value=0)
-
     fig, ax = plt.subplots()
     ax.plot(by_hour.index, by_hour.values, marker="o", color="#d62728")
     ax.set_title("Complaints by Hour of Day")
@@ -137,7 +121,6 @@ def make_line_chart(df):
 
 
 def make_map(df):
-    """[MAP] Interactive PyDeck scatter map with a hover tooltip."""
     map_df = df[["Latitude", "Longitude", "Borough", "Complaint Type"]].copy()
 
     layer = pdk.Layer(
