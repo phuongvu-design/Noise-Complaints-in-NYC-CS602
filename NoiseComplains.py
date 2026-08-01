@@ -42,18 +42,13 @@ def load_data(path, encoding="utf-8"):
         "Longitude": "Longitude",
     }
     df = df[list(keep.keys())].rename(columns=keep)
-
-
     df = df.dropna(subset=["Latitude", "Longitude", "Borough"])
     df = df[df["Borough"] != "Unspecified"]
-
-
     df["Created Date"] = pd.to_datetime(
         df["Created Date"], format="%Y %b %d %I:%M:%S %p", errors="coerce"
     )
     df = df.dropna(subset=["Created Date"])
     df["Hour"] = df["Created Date"].dt.hour
-
     return df
 
 def filter_data(df, borough, complaint_types, hour_range):
@@ -127,7 +122,12 @@ def make_map(df):
     )
     view = pdk.ViewState(latitude=40.71, longitude=-73.95, zoom=9.5)
     tooltip = {"text": "{Complaint Type}\nBorough: {Borough}"}
-    return pdk.Deck(layers=[layer], initial_view_state=view, tooltip=tooltip)
+    return pdk.Deck(
+        layers=[layer],
+        initial_view_state=view,
+        tooltip=tooltip,
+        map_style=pdk.map_styles.LIGHT,
+    )
 
 
 def main():
