@@ -58,12 +58,8 @@ def load_data(path, encoding="utf-8"):
 
 def filter_data(df, borough, complaint_types, hour_range):
     result = df
-
-
     if borough != "All Boroughs":
         result = result[result["Borough"] == borough]
-
-
     low, high = hour_range
     result = result[
         (result["Complaint Type"].isin(complaint_types))
@@ -78,7 +74,6 @@ def busiest_hour(df):
         return None, 0
     counts = df["Hour"].value_counts()
     return int(counts.index[0]), int(counts.iloc[0])
-
 
 
 def top_complaints(df, n=5):
@@ -122,7 +117,6 @@ def make_line_chart(df):
 
 def make_map(df):
     map_df = df[["Latitude", "Longitude", "Borough", "Complaint Type"]].copy()
-
     layer = pdk.Layer(
         "ScatterplotLayer",
         data=map_df,
@@ -133,12 +127,7 @@ def make_map(df):
     )
     view = pdk.ViewState(latitude=40.71, longitude=-73.95, zoom=9.5)
     tooltip = {"text": "{Complaint Type}\nBorough: {Borough}"}
-    return pdk.Deck(
-        layers=[layer],
-        initial_view_state=view,
-        tooltip=tooltip,
-        map_style=pdk.map_styles.SATELLITE,
-    )
+    return pdk.Deck(layers=[layer], initial_view_state=view, tooltip=tooltip)
 
 
 def main():
@@ -148,38 +137,29 @@ def main():
         "Noise complaints reported to NYC 311 between Dec 24, 2025 and Jan 2, 2026. "
         "Use the filters on the left to explore where and when they happened."
     )
-
-
     df = load_data(DATA_FILE, encoding="utf-8")
-
     st.sidebar.header("Filters")
-
     borough_options = ["All Boroughs"] + [b for b in sorted(df["Borough"].unique())]
     borough = st.sidebar.selectbox("Choose a borough", borough_options)
-
     all_types = sorted(df["Complaint Type"].unique())
     complaint_types = st.sidebar.multiselect(
         "Complaint types", all_types, default=all_types
     )
 
     hour_range = st.sidebar.slider("Hour of day range", 0, 23, (0, 23))
-
     if len(complaint_types) == 0:
         st.warning("Please select at least one complaint type in the sidebar.")
         return
 
     filtered = filter_data(df, borough, complaint_types, hour_range)
-
     hour, count = busiest_hour(filtered)
     total = len(filtered)
     percent = round(total / len(df) * 100, 1) if len(df) else 0
-
     c1, c2, c3 = st.columns(3)
     c1.metric("Complaints shown", f"{total:,}")
     c2.metric("Share of all complaints", f"{percent}%")
     if hour is not None:
         c3.metric("Busiest hour", f"{hour}:00 ({count})")
-
     if total == 0:
         st.info("No complaints match these filters. Try widening them.")
         return
@@ -191,12 +171,9 @@ def main():
         st.pyplot(make_pie_chart(filtered))
 
     st.pyplot(make_line_chart(filtered))
-
     st.subheader("Map of Complaint Locations")
     st.pydeck_chart(make_map(filtered))
-
     st.subheader("Borough vs. Complaint Type")
-
     pivot = pd.pivot_table(
         filtered,
         index="Borough",
@@ -206,10 +183,8 @@ def main():
         fill_value=0,
     )
     st.dataframe(pivot)
-
     st.subheader("Most Common Complaint Types")
     st.write(top_complaints(filtered))
-
 
 if __name__ == "__main__":
     main()
