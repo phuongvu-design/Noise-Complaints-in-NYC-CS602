@@ -83,12 +83,12 @@ def make_bar_chart(df):
     # ax.set_title("Noise Complaints by Borough")
     ax.set_xlabel("Borough")
     ax.set_ylabel("Number of Complaints")
-    ax.tick_params(axis="x", rotation=30)
+    ax.tick_params(axis="x", rotation=20)
     return fig
 
 
 def make_pie_chart(df):
-    counts = top_complaints(df, 5)  # [PY1] called WITHOUT the default (n=5 given)
+    counts = top_complaints(df, 5)
     fig, ax = plt.subplots()
     ax.pie(counts.values, labels=counts.index, autopct="%1.1f%%", startangle=90)
     # ax.set_title("Top 5 Complaint Types")
