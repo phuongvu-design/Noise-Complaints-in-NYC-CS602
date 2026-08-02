@@ -32,7 +32,6 @@ BOROUGH_COLORS = {
 @st.cache_data
 def load_data(path, encoding="utf-8"):
     df = pd.read_csv(path, encoding=encoding, low_memory=False)
-
     keep = {
         "Created Date": "Created Date",
         "Problem (formerly Complaint Type)": "Complaint Type",
@@ -137,16 +136,19 @@ def main():
         "Noise complaints reported to NYC 311 between Dec 24, 2025 and Jan 2, 2026. "
         "Use the filters on the left to explore where and when they happened."
     )
+
     df = load_data(DATA_FILE, encoding="utf-8")
+
     st.sidebar.header("Filters")
+
     borough_options = ["All Boroughs"] + [b for b in sorted(df["Borough"].unique())]
     borough = st.sidebar.selectbox("Choose a borough", borough_options)
     all_types = sorted(df["Complaint Type"].unique())
     complaint_types = st.sidebar.multiselect(
         "Complaint types", all_types, default=all_types
     )
-
     hour_range = st.sidebar.slider("Hour of day range", 0, 23, (0, 23))
+
     if len(complaint_types) == 0:
         st.warning("Please select at least one complaint type in the sidebar.")
         return
@@ -154,7 +156,9 @@ def main():
     filtered = filter_data(df, borough, complaint_types, hour_range)
     hour, count = busiest_hour(filtered)
     total = len(filtered)
+
     percent = round(total / len(df) * 100, 1) if len(df) else 0
+
     c1, c2, c3 = st.columns(3)
     c1.metric("Complaints shown", f"{total:,}")
     c2.metric("Share of all complaints", f"{percent}%")
@@ -169,10 +173,11 @@ def main():
         st.pyplot(make_bar_chart(filtered))
     with right:
         st.pyplot(make_pie_chart(filtered))
+       st.pyplot(make_line_chart(filtered))
 
-    st.pyplot(make_line_chart(filtered))
     st.subheader("Map of Complaint Locations")
     st.pydeck_chart(make_map(filtered))
+
     st.subheader("Borough vs. Complaint Type")
     pivot = pd.pivot_table(
         filtered,
@@ -183,6 +188,7 @@ def main():
         fill_value=0,
     )
     st.dataframe(pivot)
+
     st.subheader("Most Common Complaint Types")
     st.write(top_complaints(filtered))
 
