@@ -75,7 +75,7 @@ def top_complaints(df, n=5):
     return counts.sort_values(ascending=False).head(n)
 
 
-def make_bar_chart(df):
+def df_bar_chart(df):
     counts = df["Borough"].value_counts().sort_values(ascending=False)  # [DA2]
     colors = [BOROUGH_COLORS.get(b, "#888888") for b in counts.index]
     fig, ax = plt.subplots()
@@ -87,7 +87,7 @@ def make_bar_chart(df):
     return fig
 
 
-def make_pie_chart(df):
+def df_pie_chart(df):
     counts = top_complaints(df, 5)
     fig, ax = plt.subplots()
     ax.pie(counts.values, labels=counts.index, autopct="%1.1f%%", startangle=90)
@@ -96,7 +96,7 @@ def make_pie_chart(df):
     return fig
 
 
-def make_line_chart(df):
+def df_line_chart(df):
     by_hour = df.groupby("Hour").size()
     by_hour = by_hour.reindex(range(24), fill_value=0)
     fig, ax = plt.subplots()
@@ -109,7 +109,7 @@ def make_line_chart(df):
     return fig
 
 
-def make_map(df):
+def df_map(df):
     map_df = df[["Latitude", "Longitude", "Borough", "Complaint Type"]].copy()
     layer = pdk.Layer(
         "ScatterplotLayer",
@@ -170,19 +170,19 @@ def main():
     left, right = st.columns(2)
     with left:
         st.subheader("Noise Complaints by Borough")
-        st.pyplot(make_bar_chart(filtered))
+        st.pyplot(df_bar_chart(filtered))
     with right:
         st.subheader("Top 5 Complaint Types")
-        st.pyplot(make_pie_chart(filtered))
+        st.pyplot(df_pie_chart(filtered))
 
 
     left, right = st.columns(2)
     with left:
         st.subheader("Complaints by Hour of Day")
-        st.pyplot(make_line_chart(filtered))
+        st.pyplot(df_line_chart(filtered))
     with right:
         st.subheader("Map of Complaint Locations")
-        st.pydeck_chart(make_map(filtered))
+        st.pydeck_chart(df_map(filtered))
 
     st.subheader("Borough vs. Complaint Type")
     pivot = pd.pivot_table(
