@@ -187,10 +187,8 @@ def main():
     )
     st.dataframe(pivot)
 
-    left_aligned = st.columns(2)
-    with left_aligned:
-        st.subheader("Most Common Complaint Types")
-        st.write(top_complaints(filtered))
+    st.subheader("Most Common Complaint Types")
+    st.write(top_complaints(filtered))
 
 if __name__ == "__main__":
     main()
