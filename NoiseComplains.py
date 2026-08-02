@@ -80,7 +80,7 @@ def make_bar_chart(df):
     colors = [BOROUGH_COLORS.get(b, "#888888") for b in counts.index]
     fig, ax = plt.subplots()
     ax.bar(counts.index, counts.values, color=colors)
-    ax.set_title("Noise Complaints by Borough")
+    # ax.set_title("Noise Complaints by Borough")
     ax.set_xlabel("Borough")
     ax.set_ylabel("Number of Complaints")
     ax.tick_params(axis="x", rotation=30)
@@ -91,7 +91,7 @@ def make_pie_chart(df):
     counts = top_complaints(df, 5)  # [PY1] called WITHOUT the default (n=5 given)
     fig, ax = plt.subplots()
     ax.pie(counts.values, labels=counts.index, autopct="%1.1f%%", startangle=90)
-    ax.set_title("Top 5 Complaint Types")
+    # ax.set_title("Top 5 Complaint Types")
     ax.axis("equal")
     return fig
 
@@ -101,7 +101,7 @@ def make_line_chart(df):
     by_hour = by_hour.reindex(range(24), fill_value=0)
     fig, ax = plt.subplots()
     ax.plot(by_hour.index, by_hour.values, marker="o", color="#d62728")
-    ax.set_title("Complaints by Hour of Day")
+    # ax.set_title("Complaints by Hour of Day")
     ax.set_xlabel("Hour (0 = midnight, 23 = 11 PM)")
     ax.set_ylabel("Number of Complaints")
     ax.set_xticks(range(0, 24, 2))
