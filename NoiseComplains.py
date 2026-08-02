@@ -195,8 +195,10 @@ def main():
     )
     st.dataframe(pivot)
 
-    st.subheader("Most Common Complaint Types")
-    st.write(top_complaints(filtered))
+    left, right = st.columns(2)
+    with left:
+        st.subheader("Most Common Complaint Types")
+        st.write(top_complaints(filtered))
 
 if __name__ == "__main__":
     main()
