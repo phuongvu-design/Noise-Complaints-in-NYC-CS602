@@ -156,7 +156,6 @@ def main():
     filtered = filter_data(df, borough, complaint_types, hour_range)
     hour, count = busiest_hour(filtered)
     total = len(filtered)
-
     percent = round(total / len(df) * 100, 1) if len(df) else 0
 
     c1, c2, c3 = st.columns(3)
