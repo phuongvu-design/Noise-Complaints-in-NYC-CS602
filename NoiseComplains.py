@@ -1,6 +1,6 @@
 """
 Name:        Phuong Vu
-CS602:       Section XXX
+CS602:       CS602-1
 Data:        NYC 311 Noise Complaints (Dec 24, 2025 - Jan 2, 2026)
 URL:         Link to your web application on Streamlit Cloud (if posted)
 
