@@ -169,9 +169,12 @@ def main():
 
     left, right = st.columns(2)
     with left:
+        st.subheader("Noise Complaints by Borough")
         st.pyplot(make_bar_chart(filtered))
+        st.subheader("Complaints by Hour of Day")
         st.pyplot(make_line_chart(filtered))
     with right:
+        st.subheader("Top 5 Complaint Types")
         st.pyplot(make_pie_chart(filtered))
         st.subheader("Map of Complaint Locations")
         st.pydeck_chart(make_map(filtered))
