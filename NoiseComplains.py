@@ -172,7 +172,8 @@ def main():
         st.pyplot(make_bar_chart(filtered))
     with right:
         st.pyplot(make_pie_chart(filtered))
-        st.pyplot(make_line_chart(filtered))
+
+    st.pyplot(make_line_chart(filtered))
 
     st.subheader("Map of Complaint Locations")
     st.pydeck_chart(make_map(filtered))
