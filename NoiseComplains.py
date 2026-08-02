@@ -170,13 +170,11 @@ def main():
     left, right = st.columns(2)
     with left:
         st.pyplot(make_bar_chart(filtered))
+        st.pyplot(make_line_chart(filtered))
     with right:
         st.pyplot(make_pie_chart(filtered))
-
-    st.pyplot(make_line_chart(filtered))
-
-    st.subheader("Map of Complaint Locations")
-    st.pydeck_chart(make_map(filtered))
+        st.subheader("Map of Complaint Locations")
+        st.pydeck_chart(make_map(filtered))
 
     st.subheader("Borough vs. Complaint Type")
     pivot = pd.pivot_table(
